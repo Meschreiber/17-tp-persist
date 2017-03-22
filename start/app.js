@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 app.use(morgan('dev'))
-app.use('/api', require('./routes/api'))
+app.use('/api', require('./routes/api/days'))
 app.use('/', router);
 
 app.use(function (err, req, res, next) {
