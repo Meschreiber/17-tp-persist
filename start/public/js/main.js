@@ -64,6 +64,12 @@ $(function initializeMap() {
         return marker
     }
 
+    // we can use AJAX to write our url such that our router than access the urls
+    // $.ajax({
+    //   method: 'PUT',
+    //   url : 'api/days?id=' + day.id
+    // })
+
     // 0. Fetch the database, parsed from json to a js object
     const db = fetch('/api/options').then(r => r.json())
 
