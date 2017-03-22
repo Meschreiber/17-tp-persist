@@ -170,4 +170,17 @@ $(function initializeMap () {
 
   // When we start, add a day
   $('button.addDay').click()
+
+
+
+  $.get('/api/options')
+.then(function (data) {
+ return data.restaurants;
+  })
+.then(function (restaurants) {
+  restaurants.forEach(function(restaurant){
+    console.log(restaurant.name);
+  });
+})
+.catch( console.error.bind(console) );
 });
