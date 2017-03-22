@@ -24,10 +24,9 @@ var Place = db.model('place');
 // })
 
 
-router.get('/', function(req, res, next) {
-	res.render('index');
+router.get('/', function (req, res, next) {
+    res.render('index');
 })
-
 
 // Example:
 //
@@ -54,13 +53,13 @@ router.get('/', function(req, res, next) {
 // )
 
 router.get('/api/options', (req, res, next) =>
-	Promise.props({
-		hotels: Hotel.findAll({ include: [Place] }),
-		restaurants: Restaurant.findAll({ include: [Place] }),
-		activities: Activity.findAll({ include: [Place] })
-	})
-		.then(data => res.json(data))
-		.catch(next)
+    Promise.props({
+        hotels: Hotel.findAll({ include: [Place] }),
+        restaurants: Restaurant.findAll({ include: [Place] }),
+        activities: Activity.findAll({ include: [Place] })
+    })
+    .then(data => res.json(data))
+    .catch(next)
 )
 
 // Use Fetch (built in browser API):
@@ -74,9 +73,9 @@ router.get('/api/options', (req, res, next) =>
 router.post('/api/echo', (req, res) => res.json(req.body))
 
 router.post('/api/hotels',
-	(req, res, next) =>
-		Hotel.create(req.body)
-			.then(hotel => res.json(hotel))
-			.catch(next))
+    (req, res, next) =>
+    Hotel.create(req.body)
+    .then(hotel => res.json(hotel))
+    .catch(next))
 
 module.exports = router;
