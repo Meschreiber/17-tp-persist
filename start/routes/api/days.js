@@ -20,7 +20,7 @@ router.get('/days', function(req, res, next){
 // Send one day's activities
 router.get('/days/:id', function(req, res, next){
     var id = req.params.id;
-    Day.findOne( {where: {number: id}})
+    Day.findOne( {where: {id: id}})
     .then(function(day){
         res.json(day);
     })
