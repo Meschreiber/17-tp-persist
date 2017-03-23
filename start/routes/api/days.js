@@ -50,25 +50,24 @@ router.post('/days/:id', function (req, res, next) {
 });
 
 // add and remove an attraction from that day
-
-router.put('/days/:id', function (req, res, next) {
-    console.log(req.query.type);
-    if (req.query.type === 'restuarants') {
-        Day.findOne({
-            where: {
-                id: req.params.id
-            }
-        })
-    }
-
-    if (req.query.type === 'activities') {
-        Day.findOne({
-            where: {
-                id: req.params.id
-            }
-        })
-    }
-})
+router.put('/days/:id/:type', function (req, res, next) {
+    console.log(req.body);
+    var type = req.params.type;
+    Day.findById(req.params.id)
+    .then(function(foundDay){
+        
+        if(type === 'hotels'){
+            foundDay.setHotel(req.body.id);
+        }
+        else if (type === 'restaurants'){
+             foundDay.addRestaurant(req.body.id);
+        }
+        else if (type === 'activities'){
+             foundDay.addActivity(req.body.id);
+        }
+    })
+    .catch(next);
+});
 
 
 module.exports = router;

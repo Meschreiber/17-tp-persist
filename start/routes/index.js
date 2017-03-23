@@ -7,26 +7,26 @@ var Restaurant = db.model('restaurant');
 var Activity = db.model('activity');
 var Place = db.model('place');
 
-// router.get('/', function(req, res, next) {
-// 	Promise.all([
-// 		Hotel.findAll({ include: [Place] }),
-// 		Restaurant.findAll({ include: [Place] }),
-// 		Activity.findAll({ include: [Place] })
-// 	])
-// 	.spread(function(hotels, restaurants, activities) {
-// 		res.render('index', {
-// 			hotels: hotels,
-// 			restaurants: restaurants,
-// 			activities: activities
-// 		})
-// 	})
-// 	.catch(next)
-// })
-
-
-router.get('/', function (req, res, next) {
-    res.render('index');
+router.get('/', function(req, res, next) {
+	Promise.all([
+		Hotel.findAll({ include: [Place] }),
+		Restaurant.findAll({ include: [Place] }),
+		Activity.findAll({ include: [Place] })
+	])
+	.spread(function(hotels, restaurants, activities) {
+		res.render('index', {
+			hotels: hotels,
+			restaurants: restaurants,
+			activities: activities
+		})
+	})
+	.catch(next)
 })
+
+
+// router.get('/', function (req, res, next) {
+//     res.render('index');
+// })
 
 // Example:
 //
