@@ -71,25 +71,37 @@ router.put('/days/:id/:type', function (req, res, next) {
 });
 
 // delete an activity from a day
-router.delete('/days/:id/:type', function (req, res, next) {
-    console.log(req.body);
-    var type = req.params.type;
-    Day.findById(req.params.id)
-    .then(function(foundDay){
-        
-        if(type === 'hotels'){
-            foundDay.findOne({where: {hotelId: req.body.id}})
-            .then(function(foundHotel){
-                foundHotel.destroy({force:true});
-            })
+router.delete('/days/:id', function (req, res, next) {
+    var name = req.body.name;
+    var id = req.body.id;
+
+    Hotel.findOne({where: {id: id, name: name}})
+    .then(function(foundHotel){
+        if(foundHotel){
+             Day.findOne({where: {hotelId: foundHotel.id}})
+             .then(function(foundDayInstance){
+                 foundDayInstance.destroy();
+             })
         }
-        else if (type === 'restaurants'){
-             foundDay.addRestaurant(req.body.id);
-        }
-        else if (type === 'activities'){
-             foundDay.addActivity(req.body.id);
+        else {
+           return Restaurant.findOne({where: {id: id, name: name}})
         }
     })
+    .then(function(foundRestaurant){
+        if(foundRestaurant){
+            Day.getRestaurant({where: {restaurantId: foundRestaurant.id}})
+            
+
+        }
+        else {
+           Activity.findOne({where: {id: id, name: name}})
+        }
+    })
+    .then(function(foundActivity){
+        if(foundActivity){
+
+        }        
+    })  
     .catch(next);
 });
 
