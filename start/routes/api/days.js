@@ -39,17 +39,18 @@ router.delete('/days/:id', function (req, res, next) {
 });
 
 
-// Create a day
+// Create a day   CHECK
 router.post('/days/:id', function (req, res, next) {
     var id = req.params.id;
-    Day.create({ where: { number: id } })
+    console.log(id);
+    Day.create({ number: id } )
         .then(function (day) {
             res.json(day);
         })
         .catch(next)
 });
 
-// add and remove an attraction from that day
+// add an attraction from that day  CHECK
 router.put('/days/:id/:type', function (req, res, next) {
     console.log(req.body);
     var type = req.params.type;
@@ -58,6 +59,29 @@ router.put('/days/:id/:type', function (req, res, next) {
         
         if(type === 'hotels'){
             foundDay.setHotel(req.body.id);
+        }
+        else if (type === 'restaurants'){
+             foundDay.addRestaurant(req.body.id);
+        }
+        else if (type === 'activities'){
+             foundDay.addActivity(req.body.id);
+        }
+    })
+    .catch(next);
+});
+
+// delete an activity from a day
+router.delete('/days/:id/:type', function (req, res, next) {
+    console.log(req.body);
+    var type = req.params.type;
+    Day.findById(req.params.id)
+    .then(function(foundDay){
+        
+        if(type === 'hotels'){
+            foundDay.findOne({where: {hotelId: req.body.id}})
+            .then(function(foundHotel){
+                foundHotel.destroy({force:true});
+            })
         }
         else if (type === 'restaurants'){
              foundDay.addRestaurant(req.body.id);

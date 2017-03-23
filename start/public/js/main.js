@@ -126,14 +126,12 @@ $(function initializeMap() {
                 type = $(option)
                 .closest('select')[0]
                 .dataset.type
-
-            console.log(type);
             // Make a li out of this item
             const li = $(`<li>${item.name} <button class='del'>x</button></li>`)[0]
 
             if ($('.current.day').has(li).length) {
-                console.log('our if statement: ', $('.current.day').has(li));
-                console.log('you already have this item!')
+                // console.log('our if statement: ', $('.current.day').has(li));
+                // console.log('you already have this item!')
             } else {
                 // Draw a marker on the map and attach the marker to the li
                 li.marker = drawMarker(type, item.place.location)
@@ -164,7 +162,20 @@ $(function initializeMap() {
     $(document).on('click', 'button.del',
         evt => $(evt.target).closest('li').each((_i, li) => {
             li.marker.setMap(null)
-            $(li).remove()
+            var name = $(li).text().slice(0, -1);
+            $(li).remove();
+            var dayId = $('.current.day').index() + 1;
+            console.log("Here's our shit.", dayId, name);
+            $.ajax({
+                    method: 'DELETE',
+                    url: 'api/days/' + dayId,
+                    data: {
+                        name: name,
+                        id: item.id,
+                        type: type
+                    } // what we want to pass to the router as req.body
+
+                })
         })
     )
 
@@ -178,8 +189,15 @@ $(function initializeMap() {
             $(evt.target).before(
                 $(`<ol class="current day"><h3><span class=day-head></span><button class=delDay>x</button></h3></ol>`)
             )
-
+            //console.log($('.day.current').index());
+            var dayId = ($('.day.current').index()) + 1;
             numberDays()
+            $.ajax({
+                    method: 'POST',
+                    url: 'api/days/' + dayId 
+            })
+            .then(function (data) { console.log('POST response data: ', data) })
+            .catch(console.error.bind(console));
         }
     )
 
