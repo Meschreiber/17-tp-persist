@@ -6,22 +6,26 @@ var Hotel = db.model('hotel');
 var Restaurant = db.model('restaurant');
 var Activity = db.model('activity');
 var Place = db.model('place');
+var Day = db.model('day');
 
-router.get('/', function(req, res, next) {
-	Promise.all([
-		Hotel.findAll({ include: [Place] }),
-		Restaurant.findAll({ include: [Place] }),
-		Activity.findAll({ include: [Place] })
-	])
-	.spread(function(hotels, restaurants, activities) {
-		res.render('index', {
-			hotels: hotels,
-			restaurants: restaurants,
-			activities: activities
-		})
-	})
-	.catch(next)
+router.get('/', function (req, res, next) {
+    Promise.all([
+            Hotel.findAll({ include: [Place] }),
+            Restaurant.findAll({ include: [Place] }),
+            Activity.findAll({ include: [Place] }),
+            Day.create({ number: 1 })
+        ])
+        .spread(function (hotels, restaurants, activities, days) {
+            res.render('index', {
+                hotels: hotels,
+                restaurants: restaurants,
+                activities: activities
+            })
+        })
+        .catch(next)
 })
+
+
 
 
 // router.get('/', function (req, res, next) {

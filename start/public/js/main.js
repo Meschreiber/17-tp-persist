@@ -73,6 +73,7 @@ $(function initializeMap() {
     // 0. Fetch the database, parsed from json to a js object
     const db = fetch('/api/options').then(r => r.json())
 
+
     // TODO:
     // 1. Populate the <select>s with <option>s
     $('select').each(
@@ -127,28 +128,34 @@ $(function initializeMap() {
                 .dataset.type
 
             console.log(type);
-
             // Make a li out of this item
             const li = $(`<li>${item.name} <button class='del'>x</button></li>`)[0]
 
-            // Draw a marker on the map and attach the marker to the li
-            li.marker = drawMarker(type, item.place.location)
+            if ($('.current.day').has(li).length) {
+                console.log('our if statement: ', $('.current.day').has(li));
+                console.log('you already have this item!')
+            } else {
+                // Draw a marker on the map and attach the marker to the li
+                li.marker = drawMarker(type, item.place.location)
 
-            // Add this item to our itinerary for the current day
-            $('.current.day').append(li)
-            var dayId = $('.current.day').index() + 1;
-            console.log(dayId);
-            // Add an ajax method onto this button 
-            // we can use AJAX to write our url such that our router can access the urls
-            $.ajax({
-            method: 'PUT',
-            url : 'api/days/' + dayId + '/' + type,
-            data: {
-                id: item.id
-                }// what we want to pass to the router as req.body
+                // Add this item to our itinerary for the current day
+                $('.current.day').append(li)
+                var dayId = $('.current.day').index() + 1;
+                console.log(dayId);
+                // Add an ajax method onto this button
+                // we can use AJAX to write our url such that our router can access the urls
+                $.ajax({
+                    method: 'PUT',
+                    url: 'api/days/' + dayId + '/' + type,
+                    data: {
+                        id: item.id
+                    } // what we want to pass to the router as req.body
 
-            })
-      
+                })
+            }
+
+
+
 
         })
     );
