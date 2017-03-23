@@ -13,9 +13,9 @@ router.get('/', function (req, res, next) {
             Hotel.findAll({ include: [Place] }),
             Restaurant.findAll({ include: [Place] }),
             Activity.findAll({ include: [Place] }),
-            Day.create({ number: 1 })
+            // Day.create({ number: 1 })
         ])
-        .spread(function (hotels, restaurants, activities, days) {
+        .spread(function (hotels, restaurants, activities) {
             res.render('index', {
                 hotels: hotels,
                 restaurants: restaurants,

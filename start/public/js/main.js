@@ -73,7 +73,6 @@ $(function initializeMap() {
     // 0. Fetch the database, parsed from json to a js object
     const db = fetch('/api/options').then(r => r.json())
 
-
     // TODO:
     // 1. Populate the <select>s with <option>s
     $('select').each(
@@ -112,6 +111,49 @@ $(function initializeMap() {
     //     })
     //     .catch(console.error.bind(console));
 
+    $.get('/api/days')
+        .then(function (data) {
+            console.log('GET response data', data)
+            data.forEach(function (hotel) {
+                var hotelName;
+                var location;
+                // searching db for hotel name
+                Hotel.findOne({ where: { id: hotel.hotelId } })
+                    .then(function (foundHotel) {
+                        hotelName = foundHotel.name
+                        return
+                    })
+                    .catch(next);
+
+                hotel.type = 'hotel';
+                const li = $(`<li>${hotelName}<button class='del'>x</button></li>`)
+                $('.current.day').append(li);
+                li.marker = drawMarker(type, item.place.location);
+            })
+
+        })
+        .catch(console.error.bind(console));
+    // should log an empty array
+    $.post('/api/days')
+        .then(function (data) {
+            console.log('POST response data', data)
+        })
+        .catch(console.error.bind(console));
+    // should log a new day
+    $.get('/api/days')
+        .then(function (data) { console.log('GET response data', data) })
+        .catch(console.error.bind(console));
+    // should now log an array with the new day in it
+
+    // should log "GET response data: You GOT all the days"
+    // $.ajax({
+    //         method: 'POST',
+    //         url: '/api/days'
+    //     })
+    //     .then(function (data) { console.log('POST response data: ', data) })
+    //     .catch(console.error.bind(console));
+    // should log "POST response data: You created a day!!"
+
     // 2. Wire up the add buttons
     // We could do this if we wanted to select by the add
     // dataset item instead:
@@ -126,12 +168,12 @@ $(function initializeMap() {
                 type = $(option)
                 .closest('select')[0]
                 .dataset.type
-            // Make a li out of this item
+                // Make a li out of this item
             const li = $(`<li>${item.name} <button class='del'>x</button></li>`)[0]
 
             if ($('.current.day').has(li).length) {
                 // console.log('our if statement: ', $('.current.day').has(li));
-                // console.log('you already have this item!')
+                console.log('you already have this item!')
             } else {
                 // Draw a marker on the map and attach the marker to the li
                 li.marker = drawMarker(type, item.place.location)
@@ -142,14 +184,14 @@ $(function initializeMap() {
                 console.log(dayId);
                 // Add an ajax method onto this button
                 // we can use AJAX to write our url such that our router can access the urls
-                $.ajax({
-                    method: 'PUT',
-                    url: 'api/days/' + dayId + '/' + type,
-                    data: {
-                        id: item.id
-                    } // what we want to pass to the router as req.body
+                // $.ajax({
+                //     method: 'PUT',
+                //     url: 'api/days/' + dayId + '/' + type,
+                //     data: {
+                //         id: item.id
+                //     } // what we want to pass to the router as req.body
 
-                })
+                // })
             }
 
 
@@ -167,15 +209,15 @@ $(function initializeMap() {
             var dayId = $('.current.day').index() + 1;
             console.log("Here's our shit.", dayId, name);
             $.ajax({
-                    method: 'DELETE',
-                    url: 'api/days/' + dayId,
-                    data: {
-                        name: name,
-                        id: item.id,
-                        type: type
-                    } // what we want to pass to the router as req.body
+                method: 'DELETE',
+                url: 'api/days/' + dayId,
+                data: {
+                    name: name,
+                    id: item.id,
+                    type: type
+                } // what we want to pass to the router as req.body
 
-                })
+            })
         })
     )
 
@@ -187,17 +229,17 @@ $(function initializeMap() {
 
             // Add a new day
             $(evt.target).before(
-                $(`<ol class="current day"><h3><span class=day-head></span><button class=delDay>x</button></h3></ol>`)
-            )
-            //console.log($('.day.current').index());
+                    $(`<ol class="current day"><h3><span class=day-head></span><button class=delDay>x</button></h3></ol>`)
+                )
+                //console.log($('.day.current').index());
             var dayId = ($('.day.current').index()) + 1;
             numberDays()
-            $.ajax({
-                    method: 'POST',
-                    url: 'api/days/' + dayId 
-            })
-            .then(function (data) { console.log('POST response data: ', data) })
-            .catch(console.error.bind(console));
+                // $.ajax({
+                //         method: 'POST',
+                //         url: 'api/days/' + dayId
+                //     })
+                // .then(function (data) { console.log('POST response data: ', data) })
+                // .catch(console.error.bind(console));
         }
     )
 
@@ -236,7 +278,7 @@ $(function initializeMap() {
         })
 
     // When we start, add a day
-    $('button.addDay').click()
+    // $('button.addDay').click()
 
 
 
